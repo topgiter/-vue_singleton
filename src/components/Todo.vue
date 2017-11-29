@@ -9,13 +9,13 @@
         {{ todo.project }}
       </div>
       <div class='extra content'>
-        <span class='right floated edit icon' v-on:click="showForm">
+        <span class='right floated edit icon' @click="showForm">
           <i class='edit icon'></i>
         </span>
-        <span class='right floated trash icon' v-on:click="deleteTodo(todo)">
+        <span class='right floated trash icon' @click="deleteTodo(todo)">
           <i class='trash icon'></i>
         </span>
-        <span class='right floated check icon' v-on:click="completeTodo(todo)">
+        <span class='right floated check icon' @click="completeTodo(todo)">
           <i class='check icon'></i>
         </span>
       </div>
@@ -25,19 +25,20 @@
       <div class='ui form'>
         <div class='field'>
           <label>Title</label>
-          <input type='text' v-model="todo.title" >
+          <input type='text' :value="todo.title" @change="updateTodoTitle(todo, $event)">
         </div>
         <div class='field'>
           <label>Project</label>
-          <input type='text' v-model="todo.project" >
+          <input type='text' :value="todo.project" @change="updateTodoProject(todo, $event)">
         </div>
         <div class='ui two button attached buttons'>
-          <button class='ui basic blue button' v-on:click="hideForm">
+          <button class='ui basic blue button' @click="hideForm">
             Close X
           </button>
         </div>
       </div>
     </div>
+
     <div class='ui bottom attached green basic button' v-show="!isEditing &&todo.done" disabled>
       Completed
     </div>
@@ -63,10 +64,26 @@
         this.isEditing = false;
       },
       deleteTodo(todo) {
-        this.$emit('delete-todo', todo);
+        this.$store.dispatch('removeTodo', todo);
       },
       completeTodo(todo) {
-        this.$emit('complete-todo', todo);
+        this.$store.dispatch('completeTodo', todo);
+      },
+      updateTodoTitle(todo, event) {
+        const payload = {
+          title: event.target.value,
+          todo,
+        };
+
+        this.$store.dispatch('editTodoTitle', payload);
+      },
+      updateTodoProject(todo, event) {
+        const payload = {
+          project: event.target.value,
+          todo,
+        };
+
+        this.$store.dispatch('editTodoProject', payload);
       },
     },
   };

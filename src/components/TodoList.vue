@@ -1,9 +1,9 @@
 <template>
   <div>
-    <p>Completed Tasks: {{todos.filter(todo => {return todo.done === true}).length}}</p>
-    <p>Pending Tasks: {{todos.filter(todo => {return todo.done === false}).length}}</p>
+    <p>Completed Tasks: {{completedTasksCount}}</p>
+    <p>Pending Tasks: {{pendingTasksCount}}</p>
 
-    <todo v-on:delete-todo="deleteTodo" v-on:complete-todo="completeTodo" v-for="todo in todos" v-bind:todo="todo" :key="todo.title"></todo>
+    <todo v-for="todo in todos" v-bind:todo="todo" :key="todo.title"></todo>
   </div>
 </template>
 
@@ -12,18 +12,18 @@
   import Todo from './Todo';
 
   export default {
-    props: ['todos'],
     components: {
       Todo,
     },
-    methods: {
-      deleteTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        this.todos.splice(todoIndex, 1);
+    computed: {
+      todos() {
+        return this.$store.state.todos;
       },
-      completeTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        this.todos[todoIndex].done = !this.todos[todoIndex].done;
+      completedTasksCount() {
+        return this.$store.getters.completedTodosCount;
+      },
+      pendingTasksCount() {
+        return this.$store.getters.pendingTodosCount;
       },
     },
   };

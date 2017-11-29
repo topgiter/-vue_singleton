@@ -15,7 +15,7 @@
             <input type='text' ref='project' v-model="projectText" defaultValue="">
           </div>
           <div class='ui two button attached buttons'>
-            <button class='ui basic blue button' v-on:click="sendForm()">
+            <button class='ui basic blue button' @click="sendForm()">
               Create
             </button>
             <button class='ui basic red button' v-on:click="closeForm">
@@ -48,11 +48,7 @@
         if (this.titleText.length > 0 && this.projectText.length > 0) {
           const title = this.titleText;
           const project = this.projectText;
-          this.$emit('create-todo', {
-            title,
-            project,
-            done: false,
-          });
+          this.$store.dispatch('addTodo', { title, project, done: false });
           this.titleText = '';
           this.projectText = '';
         }
